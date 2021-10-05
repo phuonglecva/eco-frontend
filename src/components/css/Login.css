@@ -1,0 +1,32 @@
+.wrapper-login-form {
+  width: 100%;
+  text-align: center;
+  background-color: aqua;
+  background-image: url("../../assets/images/images/bg-login.jpg");
+  padding-top: 7%;
+  height: 100vh;
+}
+
+.login-form {
+  width: 350px;
+  max-width: 400px;
+  display: inline-block;
+  background-color: #fff;
+  padding:20px 40px;
+  border-radius: 20px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+
+.login-form-button {
+  width: 100%;
+  border-radius: 10px;
+  /* display: block;
+  margin: 0px auto; */
+}
