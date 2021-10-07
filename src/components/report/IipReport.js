@@ -5,7 +5,7 @@ const { Option } = Select;
 
 
 
-const CpiReport = () => {
+const IipReport = () => {
     const [month, setMonth] = useState(1)
     const [year, setYear] = useState(2019)
     const [toggle, setToggle] = useState(true)
@@ -133,4 +133,4 @@ const CpiReport = () => {
     )
 }
 
-export default CpiReport;
+export default IipReport;

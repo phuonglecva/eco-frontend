@@ -4,6 +4,7 @@ import axios from 'axios';
 import { arrayTypeAnnotation } from '@babel/types';
 import BaseReport from './BaseReport';
 import CpiReport from './CpiReport';
+import IipReport from './IipReport';
 
 const { Panel } = Collapse;
 
@@ -56,8 +57,7 @@ const FreqReport = (props) => {
                         <CpiReport />
                     </Panel>
                     <Panel header="Chỉ số sản xuất công nghiệp" key="2">
-                        <p>Chỉ số giá tiêu dùng từ tháng 1/2017 đến tháng 12/2020</p>
-                        <BaseReport />
+                        <IipReport />
                     </Panel>
                     <Panel header="Chỉ số kim ngạch xuất khẩu" key="3">
                         <p>{text}</p>
