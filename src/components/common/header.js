@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import { Anchor, Drawer, Button, Image } from 'antd';
 
 const { Link } = Anchor;
-
+const hostname = "https://aic-group.bike/"
+const ssoUrl = "http://sso.ai2c.asia/org/authentication/Logout?returnurl="
+const baseUrl = "https://ktxh.ai2c.asia/"
 
 function AppHeader(props) {
   const [visible, setVisible] = useState(false);
-
+  const { setSsoToken } = props
 
   const showDrawer = () => {
     setVisible(true);
@@ -30,16 +32,16 @@ function AppHeader(props) {
           <Anchor targetOffset="65" onClick={(event, obj) => {
             if (obj.title === 'Đăng xuất') {
               localStorage.clear()
-              props.setToken(false)
+              setSsoToken(false)
             }
           }}>
-            <Link href="http://localhost:3000/#hero" title="Trang chủ" />
-            <Link href="http://localhost:3000/#about" title="Về chúng tôi" />
-            <Link href="http://localhost:3000/#feature" title="Tính năng" />
-            <Link href="http://localhost:3000/#faq" title="Câu hỏi" />
-            <Link href="http://localhost:3000/#contact" title="Liên hệ" />
+            <Link href={`${hostname}#hero`} title="Trang chủ" />
+            <Link href={`${hostname}#about`} title="Về chúng tôi" />
+            <Link href={`${hostname}#feature`} title="Tính năng" />
+            <Link href={`${hostname}#faq`} title="Câu hỏi" />
+            <Link href={`${hostname}#contact`} title="Liên hệ" />
             <div style={{ borderLeft: "1px solid gray" }}>
-              <Link title="Đăng xuất" />
+              <Link href={`${ssoUrl}${baseUrl}`} title="Đăng xuất" />
             </div>
           </Anchor>
         </div>
@@ -54,11 +56,11 @@ function AppHeader(props) {
             visible={visible}
           >
             <Anchor targetOffset="65">
-              <Link href="http://localhost:3000/#hero" title="Trang chủ" />
-              <Link href="http://localhost:3000/#about" title="Về chúng tôi" />
-              <Link href="http://localhost:3000/#feature" title="Tính năng" />
-              <Link href="http://localhost:3000/#faq" title="Câu hỏi" />
-              <Link href="http://localhost:3000/#contact" title="Liên hệ" />
+              <Link href={`${hostname}#hero`} title="Trang chủ" />
+              <Link href={`${hostname}#about`} title="Về chúng tôi" />
+              <Link href={`${hostname}#feature`} title="Tính năng" />
+              <Link href={`${hostname}#faq`} title="Câu hỏi" />
+              <Link href={`${hostname}#contact`} title="Liên hệ" />
               <div style={{ borderLeft: "1px solid gray" }}>
                 <Link title="Đăng xuất" />
               </div>

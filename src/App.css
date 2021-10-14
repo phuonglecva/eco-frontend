@@ -97,12 +97,11 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
-  height: 12vh;
+  /* padding: 20px 0; */
+  height: 10vh;
   /* font-family: 'Avenir Next'; */
   font-weight: bold;
   text-transform: uppercase;
-  margin-bottom: 5px;
 }
 
 .header .logo {

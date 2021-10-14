@@ -1,13 +1,12 @@
-import { Select, Button, Radio } from 'antd';
+import { Table, Select, Button, Radio } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Table } from 'ant-table-extensions'
 import ExportExcel from './ExportTable';
 const { Option } = Select;
 
 
 
-const IipReport = () => {
+const ImportReport = () => {
     const [month, setMonth] = useState(1)
     const [year, setYear] = useState(2019)
     const [toggle, setToggle] = useState(true)
@@ -23,36 +22,20 @@ const IipReport = () => {
     const [columns, setColumns] = useState([])
     const fetchData = () => {
 
-        let url = (timeType === 'single') ? `${process.env.REACT_APP_API_URL}/iip-report?month=${month}&year=${year}` :
-            `https://aic-group.bike/api/v1/dong-nai/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
+        let url = (timeType === 'single') ? `${process.env.REACT_APP_API_URL}/import-report?month=${month}&year=${year}` :
+            `${process.env.REACT_APP_API_URL}/import-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
         axios.get(url)
             .then((response) => {
                 let data = response.data
-                const { name, timeline, columnsData, columns } = data
+                const { year_list, month_list, columnsData, columns } = data
                 setYearList(data.year_list)
+                console.log(year_list, month_list)
                 setMonthList(data.month_list)
-
+                console.log(data.columns)
                 setFinalData(columnsData)
                 setColumns(columns)
             })
     }
-
-
-    // const fetchFromToData = () => {
-    //     let url = `http://localhost:5000/api/v1/dong-nai/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
-    //     axios.get(url)
-    //         .then((response) => {
-    //             let data = response.data
-    //             const { name, timeline, value, columns } = data
-    //             setYearList(data.year_list)
-    //             setMonthList(data.month_list)
-    //             console.log(monthList)
-    //             console.log(yearList)
-
-    //             setFinalData(data.data)
-    //             setColumns(columns)
-    //         })
-    // }
 
 
     useEffect(() => {
@@ -146,10 +129,9 @@ const IipReport = () => {
                 bordered
                 size="middle"
                 scroll={{ x: 'calc(600px + 50%)', y: 350 }}
-                searchable
             />
         </div>
     )
 }
 
-export default IipReport;
+export default ImportReport;

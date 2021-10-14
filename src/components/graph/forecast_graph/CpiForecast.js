@@ -6,10 +6,12 @@ import BaseForecast from './BaseForecast';
 const CpiForecast = (props) => {
     const defaultAlpha = 0.9
     const [mixData, setMixData] = useState({})
-
+    const [forecastData, setForecastData] = useState()
     const fetchData = React.useCallback(() => {
-        const cpisURL = "https://aic-group.bike/api/v1/dong-nai/cpies"
-        const cpiForecastURL = `https://aic-group.bike/api/v1/dong-nai/cpis/forecast/12?alpha=${defaultAlpha}`
+        // const cpisURL = "https://aic-group.bike/api/v1/dong-nai/cpies"
+        // const cpiForecastURL = `https://aic-group.bike/api/v1/dong-nai/cpis/forecast/12?alpha=${defaultAlpha}`
+        const cpisURL = `${process.env.REACT_APP_API_URL}/cpies`
+        const cpiForecastURL = `${process.env.REACT_APP_API_URL}/cpis/forecast/12?alpha=${defaultAlpha}`
 
         const getCPI = axios.get(cpisURL)
         const getCPIForecast = axios.get(cpiForecastURL)
@@ -17,6 +19,8 @@ const CpiForecast = (props) => {
             axios.spread((...allData) => {
                 const cpiData = allData[0].data
                 const forecastData = allData[1].data
+                setForecastData(forecastData.data)
+
                 let { cpi, timeline } = cpiData.data
                 let data = []
                 let mixData = {
@@ -91,7 +95,7 @@ const CpiForecast = (props) => {
 
 
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} />
+        <BaseForecast unit="%" forecastData={forecastData} mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} />
     )
 };
 export default CpiForecast;

@@ -3,7 +3,7 @@ import { Line, Mix } from '@ant-design/charts';
 import axios from 'axios'
 import '../../css/LineGraph.css'
 const BaseForecast = (props) => {
-    const { mixData, defaultAlpha } = props;
+    const { mixData, defaultAlpha, forecastData } = props;
     const mixConfig = {
         slider: {},
         appendPadding: 8,
@@ -136,6 +136,7 @@ const BaseForecast = (props) => {
     };
     return (
         <div style={{ width: "100%", textAlign: "center" }}>
+            {console.log(forecastData)}
             <div>
                 <h2 style={{ color: "#34568B", marginTop: "20px", fontFamily: 'Georgia, Times, "Times New Roman", self-serif', textTransform: "uppercase", fontWeight: "bolder" }}>{props.title}</h2>
                 {/* <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" /> */}
@@ -144,11 +145,6 @@ const BaseForecast = (props) => {
                 </div>
             </div>
         </div>
-
-        // <div style={{ width: "100%", textAlign: "center" }}>
-        //         <h2 style={{ color: "gray" }}><u>{props.title}</u></h2>
-        //     </div>
-        // </div>
     )
 };
 export default BaseForecast;

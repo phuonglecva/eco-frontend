@@ -8,8 +8,10 @@ const ImportForecast = (props) => {
     const [mixData, setMixData] = useState({})
 
     const fetchData = React.useCallback(async () => {
-        const importURL = "https://aic-group.bike/api/v1/dong-nai/import"
-        const importForecastURL = `https://aic-group.bike/api/v1/dong-nai/import/forecast/12?alpha=${defaultAlpha}`
+        // const importURL = "https://aic-group.bike/api/v1/dong-nai/import"
+        // const importForecastURL = `https://aic-group.bike/api/v1/dong-nai/import/forecast/12?alpha=${defaultAlpha}`
+        const importURL = `${process.env.REACT_APP_API_URL}/import`
+        const importForecastURL = `${process.env.REACT_APP_API_URL}/import/forecast/12?alpha=${defaultAlpha}`
 
         const getImport = axios.get(importURL)
         const getImportForecast = axios.get(importForecastURL)
@@ -88,7 +90,7 @@ const ImportForecast = (props) => {
         fetchData()
     }, [])
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} />
+        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="nhập khẩu" title={props.title} />
 
     )
 };

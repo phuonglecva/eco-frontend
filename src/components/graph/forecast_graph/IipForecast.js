@@ -8,8 +8,10 @@ const IipForecast = (props) => {
     const [mixData, setMixData] = useState({})
 
     const fetchData = React.useCallback(async () => {
-        const iipForecastUrl = `https://aic-group.bike/api/v1/dong-nai/iips/forecast/6?alpha=${defaultAlpha}`
-        const iipDataUrl = "https://aic-group.bike/api/v1/dong-nai/iips"
+        // const iipForecastUrl = `https://aic-group.bike/api/v1/dong-nai/iips/forecast/6?alpha=${defaultAlpha}`
+        // const iipDataUrl = "https://aic-group.bike/api/v1/dong-nai/iips"
+        const iipForecastUrl = `${process.env.REACT_APP_API_URL}/iips/forecast/12?alpha=${defaultAlpha}`
+        const iipDataUrl = `${process.env.REACT_APP_API_URL}/iips`
 
         const getIip = axios.get(iipDataUrl)
         const getIipForecast = axios.get(iipForecastUrl)
@@ -86,7 +88,7 @@ const IipForecast = (props) => {
         fetchData()
     }, [fetchData])
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} />
+        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="sản xuất công nghiệp" title={props.title} />
 
     )
 };

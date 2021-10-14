@@ -15,7 +15,8 @@ const UnEmpLineGraph = (props) => {
     const fetchData = React.useCallback(() => {
         axios({
             "method": "GET",
-            "url": "https://aic-group.bike/api/v1/dong-nai/unemployment",
+            // "url": "https://aic-group.bike/api/v1/dong-nai/unemployment",
+            "url": `${process.env.REACT_APP_API_URL}/unemployment`,
             "headers": {
                 "content-type": "application/json",
             }, "params": {
@@ -78,7 +79,7 @@ const UnEmpLineGraph = (props) => {
                     <Select value="bar">Biểu đồ cột</Select>
                     <Select value="pie">Biểu đồ bánh</Select>
                 </Select>
-                <h2 style={{ color: "black", paddingLeft:"100px", marginBottom:"20px" }}><u>{props.title}</u></h2>
+                <h2 style={{ color: "#34568B", marginTop: "20px", fontFamily: 'Georgia, Times, "Times New Roman", self-serif', textTransform: "uppercase", fontWeight: "bolder", marginLeft:"14%" }}><u>{props.title}</u></h2>
                 {data.map((value) => {
                     return (
                         <div style={{textAlign:"center"}}>

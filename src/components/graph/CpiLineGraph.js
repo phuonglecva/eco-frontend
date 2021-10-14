@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { Line } from '@ant-design/charts';
 import axios from 'axios'
 import BaseBarGraph from './StatisticBarGraph/BarBaseGraph';
-import { Select } from 'antd';
+import { Button, Radio, Select } from 'antd';
 import BaseLineGraph from './LineGraph/BaseLineGraph';
 import '../css/LineGraph.css'
 import CanvasDemo from './Canvas/CanvasDemo';
+import { Modal } from 'antd'
 
 const LineGraph = (props) => {
   const [data, setData] = useState(Array.from({ length: 30 }, (x, i) => ({ year: 2000 + i, value: Math.random() })))
+  const [barData, setBarData] = useState()
+  const [subData, setSubData] = useState([])
+  const [checkList, setCheckList] = useState([])
   const [config, setConfig] = useState({
     data: data,
     height: 300,
     xField: 'month',
     yField: 'cpi_data',
+    seriesField: "cat",
     point: {
       size: 3,
       shape: 'diamond',
@@ -59,13 +64,17 @@ const LineGraph = (props) => {
       timeline: [],
       data: []
     },
-    title: "Biểu đồ chỉ số giá tiêu dùng"
+    title: "Biểu đồ chỉ số giá tiêu dùng",
+    tooltip: {
+      // showCrosshairs:true
+    }
   })
-  let [responseData, setResponseData] = React.useState('');
+  let [responseData, setResponseData] = React.useState(null);
   const fetchData = React.useCallback(() => {
     axios({
       "method": "GET",
-      "url": "https://aic-group.bike/api/v1/dong-nai/cpies",
+      // "url": "https://aic-group.bike/api/v1/dong-nai/cpies",
+      "url": `${process.env.REACT_APP_API_URL}/cpies`,
       "headers": {
         "content-type": "application/json",
       }, "params": {
@@ -76,48 +85,67 @@ const LineGraph = (props) => {
         setResponseData(response.data)
         const d = response.data
         const { cpi, timeline } = d.data
+        setSubData(cpi)
+        let checkList = (Array.from({ length: cpi.length }, i => false))
+        checkList[0] = true
+        setCheckList(checkList)
         let data = []
-        cpi[0].val.forEach((val, index) => {
-          data.push({
-            month: timeline[index],
-            cpi_data: parseFloat((parseFloat(val) - 100).toFixed(2))
-          })
-        })
-        // setData(data)
+
+        for (let idx = 0; idx < cpi.length; idx++) {
+
+          let tempData = cpi[idx]
+          let cat_name = tempData.name
+          let val = tempData.val
+          for (let i = 0; i < timeline.length; i++) {
+            let ti = timeline[i]
+            data.push({
+              month: ti,
+              cat: cat_name,
+              cpi_data: parseFloat((parseFloat(val[i]) - 100).toFixed(2)),
+              key: idx
+            })
+          }
+        }
         setData(data)
         let barData = {
           timeline: timeline,
-          data: [
-            { name: "Dữ liệu cpi", data: data.map(val => val.cpi_data) }
-          ]
+          // data: [
+          //   { name: "Dữ liệu cpi", data: data.map(val => val.cpi_data) },
+          // ]
+          data: cpi.map((value, index) => ({
+            name: value.name,
+            data: value.val.map((val) => parseFloat((parseFloat(val) - 100).toFixed(2))),
+            key: index
+          }))
         }
-        setConfig({ ...config, data, barData: barData })
+        setBarData(barData)
+        const defaultData = data.filter((val) => val.key === 0)
+        const defaultBarData = barData.data.filter((val) => val.key === 0)
+        // setCheckList(checkList.map((_, id)=> id == 0))
+        setConfig({ ...config, data: defaultData, barData: { ...barData, data: defaultBarData } })
+
         console.log('cpi data', data)
       })
       .catch((error) => {
         console.log(error)
       })
   }, [])
+
+
   React.useEffect(() => {
     fetchData()
   }, [fetchData])
-  const [graphType, setGraphType] = useState("line")
+
   return (
-    <div style={{ width: "100%", textAlign: "center", display: "inline-block", }}>
-      <div className="graph-area">
-        <Select defaultValue={graphType} onChange={setGraphType} style={{ float: "right", margin: "5px", backgroundColor: "red" }}>
-          <Select value="line" >Biểu đồ đường</Select>
-          <Select value="bar" >Biểu đồ cột</Select>
-        </Select>
-        <div style={{ clear: 'both' }}>
-          <div className="line-graph">
-            {(graphType === 'line') && <Line {...config} />}
-            {(graphType === 'bar') && <CanvasDemo {...config} />}
-          </div>
-          {/* {(graphType === 'bar') && <BaseBarGraph {...config} />} */}
-        </div>
-      </div>
-    </div>
+    <BaseLineGraph
+      title="Chỉ số giá tiêu dùng"
+      subData={subData}
+      config={config}
+      setConfig={setConfig}
+      data={data}
+      barData={barData}
+      checkList={checkList}
+      setCheckList={setCheckList} />
   )
 };
 export default LineGraph;

@@ -1,8 +1,9 @@
-import { Table, Select, Button, Radio } from 'antd';
+import { Select, Button, Radio } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Table } from 'ant-table-extensions';
+import ExportExcel from './ExportTable';
 const { Option } = Select;
-
 
 
 const CpiReport = () => {
@@ -20,7 +21,7 @@ const CpiReport = () => {
     const [data, setData] = useState([])
     const [columns, setColumns] = useState([])
     const fetchData = () => {
-        let url = `http://localhost:5000/api/v1/dong-nai/cpi-report?month=${month}&year=${year}`
+        let url = `${process.env.REACT_APP_API_URL}/cpi-report?month=${month}&year=${year}`
         axios.get(url)
             .then((response) => {
                 let data = response.data
@@ -33,9 +34,10 @@ const CpiReport = () => {
             })
     }
 
-    
+
     const fetchFromToData = () => {
-        let url = `http://localhost:5000/api/v1/dong-nai/cpi-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
+        // let url = `https://aic-group.bike/api/v1/dong-nai/cpi-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
+        let url = `${process.env.REACT_APP_API_URL}/cpi-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
         axios.get(url)
             .then((response) => {
                 let data = response.data
@@ -53,13 +55,13 @@ const CpiReport = () => {
         console.log("running")
         if (timeType === "single") {
             fetchData()
-        }else {
+        } else {
             fetchFromToData()
         }
     }, [toggle])
     const [timeType, setTimeType] = useState("single")
     return (
-        <div>
+        <div style={{marginBottom: "200px"}}>
             <div className="radio">
                 <Radio.Group value={timeType} onChange={(e) => {
                     setTimeType(e.target.value)
@@ -93,12 +95,18 @@ const CpiReport = () => {
                         <span>từ: </span>
                         <Select defaultValue={`${fromMonth}`} onChange={setFromMonth}>
                             {monthList.map((val) => {
-                                return <Option value={val}>{val}</Option>
+                                if ((parseFloat(fromYear) == parseFloat(toYear)) && (parseFloat(val) > parseFloat(toMonth))) {
+                                    return null
+                                } else {
+                                    return <Option value={val}>{val}</Option>
+                                }
                             })}
                         </Select>
                         <Select defaultValue={`${fromYear}`} onChange={setFromYear}>
                             {yearList.map((val) => {
-                                return <Option value={val}>{val}</Option>
+                                if (parseFloat(val) <= parseFloat(toYear)) {
+                                    return <Option value={val}>{val}</Option>
+                                }
                             })}
                         </Select>
 
@@ -107,12 +115,18 @@ const CpiReport = () => {
                         <span>đến: </span>
                         <Select defaultValue={`${toMonth}`} onChange={setToMonth}>
                             {monthList.map((val) => {
-                                return <Option value={val}>{val}</Option>
+                                if ((parseFloat(fromYear) == parseFloat(toYear)) && (parseFloat(val) < parseFloat(fromMonth))) {
+                                    return null
+                                } else {
+                                    return <Option value={val}>{val}</Option>
+                                }
                             })}
                         </Select>
                         <Select defaultValue={`${toYear}`} onChange={setToYear}>
                             {yearList.map((val) => {
-                                return <Option value={val}>{val}</Option>
+                                if (parseFloat(val) >= parseFloat(fromYear)) {
+                                    return <Option value={val}>{val}</Option>
+                                }
                             })}
                         </Select>
 
@@ -121,6 +135,10 @@ const CpiReport = () => {
                         setToggle(!toggle)
                     }}>Xem báo cáo</Button>
                 </div>}
+                <Button onClick={() => {
+                    const title = (timeType === "single") ? `Chỉ số kim ngạch nhập khẩu vào tháng ${month}-${year}` : `Chỉ số kim ngạch nhập khẩu vào từ ${fromMonth}-${fromYear} đến ${toMonth}-${toYear}`
+                    ExportExcel(columns, finalData, title)
+                }}>Xuất dữ liệu</Button>
             </div>
             <Table
                 columns={columns}
@@ -128,6 +146,8 @@ const CpiReport = () => {
                 bordered
                 size="middle"
                 scroll={{ x: 'calc(600px + 50%)', y: 350 }}
+                searchable
+                searchableProps={{ debounce: true, fuzzySearch:true }}
             />
         </div>
     )

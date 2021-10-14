@@ -65,7 +65,8 @@ const ExportLineGraph = (props) => {
   const fetchData = React.useCallback(() => {
     axios({
       "method": "GET",
-      "url": "https://aic-group.bike/api/v1/dong-nai/export",
+      // "url": "https://aic-group.bike/api/v1/dong-nai/export",
+      "url": `${process.env.REACT_APP_API_URL}/export`,
       "headers": {
         "content-type": "application/json",
       }, "params": {
@@ -99,10 +100,12 @@ const ExportLineGraph = (props) => {
   React.useEffect(() => {
     fetchData()
   }, [fetchData])
-  const [graphType, setGraphType] = useState("bar");
+  const [graphType, setGraphType] = useState("line");
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>
+      <h2 style={{ color: "#34568B", marginTop: "20px", fontFamily: 'Georgia, Times, "Times New Roman", self-serif', textTransform: "uppercase", fontWeight: "bolder" }}>Kim ngạch nhập khẩu</h2>
+
       <div className="graph-area">
         <Select defaultValue={graphType} onChange={setGraphType} style={{ float: "right", margin: "5px" }}>
           <Select value="line">Biểu đồ đường</Select>
@@ -112,7 +115,7 @@ const ExportLineGraph = (props) => {
           {/* {(graphType === 'line') && <BaseLineGraph {...config} />}; */}
           {/* {(graphType === 'bar') && <BaseBarGraph {...config} />} */}
           <div className="line-graph">
-            {(graphType === 'line') && <Line {...config} />};
+            {(graphType === 'line') && <Line {...config} />}
             {(graphType === 'bar') && <CanvasDemo {...config} />}
           </div>
         </div>

@@ -117,10 +117,15 @@ ul {
 
 .box-shadow {
     /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
-    box-shadow: rgba(24, 8, 8, 0.15) 0px 5px 15px 0px;
+    box-shadow: rgba(163, 108, 108, 0.15) 0px 5px 15px 0px;
     border-radius: 10px;
+    display: inline-block;
+    /* You can also add some margins here to make it look prettier */
+    zoom:1;
+    *display:inline;
     padding: 8px;
     margin-bottom: 2px;
+    min-height: 50px;
 }
 
 .box-shadow:hover {

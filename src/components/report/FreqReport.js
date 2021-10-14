@@ -5,6 +5,10 @@ import { arrayTypeAnnotation } from '@babel/types';
 import BaseReport from './BaseReport';
 import CpiReport from './CpiReport';
 import IipReport from './IipReport';
+import ImportReport from './ImportReport';
+import ExportReport from './ExportReport';
+import UnemploymentReport from './UnemploymentReport';
+import ThuchiReport from './ThuchiReport';
 
 const { Panel } = Collapse;
 
@@ -60,13 +64,16 @@ const FreqReport = (props) => {
                         <IipReport />
                     </Panel>
                     <Panel header="Chỉ số kim ngạch xuất khẩu" key="3">
-                        <p>{text}</p>
+                        <ExportReport />
                     </Panel>
                     <Panel header="Chỉ số kim ngạch nhập khẩu" key="4">
-                        <p>{text}</p>
+                        <ImportReport />
                     </Panel>
                     <Panel header="Tỷ lệ thất nghiệp" key="5">
-                        <p>{text}</p>
+                        <UnemploymentReport />
+                    </Panel>
+                    <Panel header="Thu chi ngân sách" key="6">
+                        <ThuchiReport />
                     </Panel>
                 </Collapse>
             </div>

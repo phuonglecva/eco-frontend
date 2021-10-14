@@ -67,8 +67,8 @@ function Sub() {
     ]);
 
     const fetchData = React.useCallback(() => {
-        const getCurrentStatusUrl = "https://aic-group.bike/api/v1/dong-nai/current-status"
-        axios.get(getCurrentStatusUrl).then((response) => {
+        const getCurrentStatusUrl = `${process.env.REACT_APP_API_URL}/current-status`
+                axios.get(getCurrentStatusUrl).then((response) => {
             let resData = response.data.data
             // console.log(data)
             let tempData = []
@@ -80,20 +80,7 @@ function Sub() {
                 })
             })
             let unEmpData = resData.at(-1)
-            // unEmpData.data[0].forEach((val) => {
-            //     let name = val.name
-            //     let value = val.val
-            //     tempData.push({
-            //         title: name, value: value,
-            //         unit: '%'
-            //     })
-            // })
-            // tempData.push({
-            //     title: unEmpData.data[0].name,
-            //     value: unEmpData.data[0].val,
-            //     unit: '%'
-            // })
-            console.log(unEmpData)
+            console.log(tempData)
             setData(tempData)
         }).catch((err) => {
             console.log(err)
@@ -104,11 +91,7 @@ function Sub() {
     }, [])
     const [showSubMenu, setShowSubMenu] = useState(true)
     return (
-        <div style={{
-            // display: "flex", clear: "both", marginTop: "95px",
-            // // fontFamily: "AvenirNextLTPro-Regular"
-            // fontFamily: "arial",
-        }}>
+        <div>
 
             <Layout>
 
@@ -122,6 +105,7 @@ function Sub() {
                         setShowSubMenu(val)
                     }}
                     width={"25%"} className="site-layout-background line" style={{
+                        minWidth:"25%"
                     }}
                 >
                     <div style={{display:"fixed"}}>
@@ -136,7 +120,7 @@ function Sub() {
                         >
                             <Menu.Item key="dash" icon={<DashboardOutlined />} title="Dashboard">DashBoard</Menu.Item>
                             <SubMenu key="data" icon={<DatabaseOutlined />} title="Thống kê các chỉ số kinh tế xã hội">
-                                <Menu.Item key="cpies" title="Chỉ số giá tiêu dùng">Chỉ số giá tiêu dùng (cpi)</Menu.Item>
+                               <Menu.Item key="cpies" title="Chỉ số giá tiêu dùng">Chỉ số giá tiêu dùng (cpi)</Menu.Item>
                                 <Menu.Item key="iips" title="Chỉ số sản xuất công nghiệp">Chỉ số sản xuất công nghiệp (iip)</Menu.Item>
                                 <Menu.Item key="unemployment" title="Tỷ lệ thất nghiệp">Tỷ lệ thất nghiệp</Menu.Item>
                                 <Menu.Item key="export" title="Kim ngạch xuất khẩu">Kim ngạch xuất khẩu</Menu.Item>
@@ -151,7 +135,7 @@ function Sub() {
                             </SubMenu>
                             <SubMenu key="report" icon={<ContainerOutlined />} title="Báo cáo">
                                 <Menu.Item key="freq_report" title="Báo cáo định kỳ">Báo cáo định kỳ</Menu.Item>
-                                <Menu.Item key="export_report" title="Xuất báo cáo">Xuất báo cáo</Menu.Item>
+                                {/* <Menu.Item key="export_report" title="Xuất báo cáo">Xuất báo cáo</Menu.Item> */}
                             </SubMenu>
                         </Menu>
                     </div>
@@ -198,7 +182,7 @@ function Sub() {
                             {selectedKey.key == 'import_model' ? <ImportForecast title={(selectedKey) ? selectedKey.item.props.title : ''} /> : ''}
                             {selectedKey.key == 'iip_model' ? <IipForecast title={(selectedKey) ? selectedKey.item.props.title : ''} /> : ''}
                             {selectedKey.key == 'freq_report' ? <FreqReport /> : ''}
-                            {selectedKey.key == 'export_report' ? <div>Export Report</div> : ''}
+                            {/* {selectedKey.key == 'export_report' ? <div>Export Report</div> : ''} */}
                         </div>
                     </Content>
                 </Layout>

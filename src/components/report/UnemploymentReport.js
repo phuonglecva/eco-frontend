@@ -1,13 +1,12 @@
-import { Select, Button, Radio } from 'antd';
+import { Table, Select, Button, Radio } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Table } from 'ant-table-extensions'
 import ExportExcel from './ExportTable';
 const { Option } = Select;
 
 
 
-const IipReport = () => {
+const UnemploymentReport = () => {
     const [month, setMonth] = useState(1)
     const [year, setYear] = useState(2019)
     const [toggle, setToggle] = useState(true)
@@ -23,36 +22,20 @@ const IipReport = () => {
     const [columns, setColumns] = useState([])
     const fetchData = () => {
 
-        let url = (timeType === 'single') ? `${process.env.REACT_APP_API_URL}/iip-report?month=${month}&year=${year}` :
-            `https://aic-group.bike/api/v1/dong-nai/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
+        let url = (timeType === 'single') ? `${process.env.REACT_APP_API_URL}/unemployment-report?year=${year}` :
+            `${process.env.REACT_APP_API_URL}/unemployment-report?fromYear=${fromYear}&toYear=${toYear}`
         axios.get(url)
             .then((response) => {
                 let data = response.data
-                const { name, timeline, columnsData, columns } = data
+                const { year_list, month_list, columnsData, columns } = data
                 setYearList(data.year_list)
-                setMonthList(data.month_list)
-
+                console.log(data.columns)
                 setFinalData(columnsData)
                 setColumns(columns)
+                console.log(columnsData)
+                console.log(columns)
             })
     }
-
-
-    // const fetchFromToData = () => {
-    //     let url = `http://localhost:5000/api/v1/dong-nai/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
-    //     axios.get(url)
-    //         .then((response) => {
-    //             let data = response.data
-    //             const { name, timeline, value, columns } = data
-    //             setYearList(data.year_list)
-    //             setMonthList(data.month_list)
-    //             console.log(monthList)
-    //             console.log(yearList)
-
-    //             setFinalData(data.data)
-    //             setColumns(columns)
-    //         })
-    // }
 
 
     useEffect(() => {
@@ -66,7 +49,7 @@ const IipReport = () => {
                 <Radio.Group value={timeType} onChange={(e) => {
                     setTimeType(e.target.value)
                 }}>
-                    <Radio value="single">Chọn Theo tháng</Radio>
+                    <Radio value="single">Chọn Theo năm</Radio>
                     <Radio value="fromTo">Chọn Theo khoảng</Radio>
                 </Radio.Group>
             </div>
@@ -74,11 +57,6 @@ const IipReport = () => {
                 {(timeType === "single") && <div style={{ display: "inline" }}>
 
                     <h4 style={{ display: "inline" }}>Dữ liệu chỉ số giá tỉnh đồng nai vào </h4>
-                    <Select defaultValue={`${month}`} onChange={setMonth}>
-                        {monthList.map((val) => {
-                            return <Option value={val}>{val}</Option>
-                        })}
-                    </Select>
                     <Select defaultValue={`${year}`} onChange={setYear}>
                         {yearList.map((val) => {
                             return <Option value={val}>{val}</Option>
@@ -93,15 +71,6 @@ const IipReport = () => {
                     <h4 style={{ display: "inline" }}>Dữ liệu chỉ số giá tỉnh đồng nai </h4>
                     <div className="from" style={{ display: "inline" }}>
                         <span>từ: </span>
-                        <Select defaultValue={`${fromMonth}`} onChange={setFromMonth}>
-                            {monthList.map((val) => {
-                                if ((parseFloat(fromYear) == parseFloat(toYear)) && (parseFloat(val) > parseFloat(toMonth))) {
-                                    return null
-                                } else {
-                                    return <Option value={val}>{val}</Option>
-                                }
-                            })}
-                        </Select>
                         <Select defaultValue={`${fromYear}`} onChange={setFromYear}>
                             {yearList.map((val) => {
                                 if (parseFloat(val) <= parseFloat(toYear)) {
@@ -113,15 +82,6 @@ const IipReport = () => {
                     </div>
                     <div className="to" style={{ display: "inline" }}>
                         <span>đến: </span>
-                        <Select defaultValue={`${toMonth}`} onChange={setToMonth}>
-                            {monthList.map((val) => {
-                                if ((parseFloat(fromYear) == parseFloat(toYear)) && (parseFloat(val) < parseFloat(fromMonth))) {
-                                    return null
-                                } else {
-                                    return <Option value={val}>{val}</Option>
-                                }
-                            })}
-                        </Select>
                         <Select defaultValue={`${toYear}`} onChange={setToYear}>
                             {yearList.map((val) => {
                                 if (parseFloat(val) >= parseFloat(fromYear)) {
@@ -136,7 +96,7 @@ const IipReport = () => {
                     }}>Xem báo cáo</Button>
                 </div>}
                 <Button onClick={() => {
-                    const title = (timeType === "single") ? `Chỉ số kim ngạch nhập khẩu vào tháng ${month}-${year}` : `Chỉ số kim ngạch nhập khẩu vào từ ${fromMonth}-${fromYear} đến ${toMonth}-${toYear}`
+                    const title = (timeType === 'single') ? `Dữ liệu chỉ số thất nghiệp năm ${year}` : `Dữ liệu chỉ số thất nghiệp từ ${fromYear} đến ${toYear}`
                     ExportExcel(columns, finalData, title)
                 }}>Xuất dữ liệu</Button>
             </div>
@@ -146,10 +106,9 @@ const IipReport = () => {
                 bordered
                 size="middle"
                 scroll={{ x: 'calc(600px + 50%)', y: 350 }}
-                searchable
             />
         </div>
     )
 }
 
-export default IipReport;
+export default UnemploymentReport;

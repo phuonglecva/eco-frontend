@@ -96,7 +96,8 @@ const ThuChiLineGraph = (props) => {
     const fetchData = React.useCallback(() => {
         axios({
             "method": "GET",
-            "url": "https://aic-group.bike/api/v1/dong-nai/thuchi",
+            // "url": "https://aic-group.bike/api/v1/dong-nai/thuchi",
+            "url": `${process.env.REACT_APP_API_URL}/thuchi`,
             "headers": {
                 "content-type": "application/json",
             }, "params": {
@@ -147,6 +148,8 @@ const ThuChiLineGraph = (props) => {
     const [graphType, setGraphType] = useState("bar")
     return (
         <div style={{ width: "100%", textAlign: "center" }}>
+            <h2 style={{ color: "#34568B", marginTop: "20px", fontFamily: 'Georgia, Times, "Times New Roman", self-serif', textTransform: "uppercase", fontWeight: "bolder" }}>Thu chi ngân sách</h2>
+
             <div className="graph-area">
                 <Select defaultValue={graphType} onChange={setGraphType} style={{ float: "right", margin: "5px" }}>
                     <Select value="line">Biểu đồ đường</Select>
