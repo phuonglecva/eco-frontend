@@ -1,7 +1,38 @@
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import '../css/Login.css'
+import { useEffect } from 'react';
 const NormalLoginForm = (props) => {
+    const { setSsoToken } = props
+    const clientId = "1dcleodlcaoodkc123";
+    const ssoURL = "http://sso.ai2c.asia/org/authentication?clientid="
+    const tokenInfoUrl = "https://sso.ai2c.asia/org/authentication/Authenticate?token=";
+    // const baseUrl = "http://localhost:3000"
+    const baseUrl = process.env.REACT_APP_BASE_URL
+    const handleSSOLogin = () => {
+        let token = localStorage.getItem("token")
+
+        if (token) {
+            console.log(token)
+            setSsoToken(token)
+            return
+        }
+
+        let params = window.location.search
+        let paramsObj = new URLSearchParams(params.slice(1,))
+
+        token = paramsObj.get('token')
+        if (!token) {
+            console.log(process.env.REACT_APP_BASE_URL)
+            // setTimeout(() => {
+            window.location.assign(`${ssoURL}${clientId}&returnUrl=${baseUrl}`)
+            // }, 2222)
+        } else {
+            localStorage.setItem("token", token)
+            setSsoToken(token)
+            window.location.assign(baseUrl)
+        }
+    }
     const testUser = [
         {
             username: 'phuonglecva',
@@ -20,13 +51,16 @@ const NormalLoginForm = (props) => {
             password: '1111'
         },
     ]
+    useEffect(() => {
+
+    }, [])
     const onFinish = (values) => {
-        const {username, password} = values
-        for(let user of testUser) {
-            if ((user.username ===  username) && (user.password === password)) {
+        const { username, password } = values
+        for (let user of testUser) {
+            if ((user.username === username) && (user.password === password)) {
                 props.setToken(true)
                 localStorage.setItem("token", true)
-                return 
+                return
             }
         }
         alert(`User not found.`)
@@ -72,8 +106,18 @@ const NormalLoginForm = (props) => {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="login-form-button"
+                        style={{
+                            marginBottom: "10px"
+                        }}
+                    >
                         Đăng nhập
+                    </Button>
+                    <Button onClick={handleSSOLogin} className="login-form-button">
+                        Đăng nhập SSO
                     </Button>
                     Hoặc <a href="">Đăng ký</a>
                 </Form.Item>

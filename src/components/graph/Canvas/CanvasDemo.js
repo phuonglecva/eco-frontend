@@ -87,7 +87,7 @@ const CanvasDemo = (props) => {
                     console.log(tooltipData);
                 });
             }}
-            style={{ width: "100%", padding: "10px", height:"55vh" }}
+            style={{ width: "100%", padding: "10px" }}
         />
     );
 };

@@ -1,13 +1,10 @@
 .graph-area {
-    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
-    /* box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px; */
-    /* box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px; */
-    box-shadow: rgba(24, 8, 8, 0.15) 0px 5px 15px 0px;
     margin-right: 10px;
     border-radius: 10px;
     display: inline-block;
     width: 80%;
     margin-top: 20px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .line-graph {
@@ -23,4 +20,96 @@
     width: 80%;
     height: auto;
     padding: 10px;
+}
+
+/* <header className="main-head">The header</header>
+<div className="info-detail">Info detail</div>
+<div className="main-graph">Main Graph</div>
+<div className="compare-graph">Compare Graph</div>
+<div className="selection-graph">Selection Graph</div> */
+
+.main-head {
+    grid-area: header;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    padding: 10px;
+}
+
+.info-detail {
+    padding: 10px;
+    grid-area: info;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.main-graph {
+    padding: 10px;
+    grid-area: main;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.compare-graph {
+    padding: 10px;
+    grid-area: compare;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.selection-graph {
+    padding: 10px;
+    grid-area: selection;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.wrapper {
+    text-align: center;
+    display: grid;
+    gap: 20px;
+    grid-template-areas: "header" "info" "main" "compare" "selection";
+    margin-top: 30px;
+}
+
+@media (min-width: 700px) {
+    .wrapper {
+        grid-template-columns: 25% 25% auto auto;
+        /* grid-template-rows: 50px 40px 1.5fr 0.5fr 0.5fr; */
+        grid-template-rows: 50px 40px 200px 200px 200px;
+        grid-template-areas: "header header header header" "info info  compare compare" "main main  compare compare" "main main  selection selection" "main main  selection selection";
+    }
+    /* .info-detail {
+        display: none;
+    } */
+}
+
+@media only screen and (max-width: 700px) {
+    .wrapper {
+        /* grid-template-columns: 25% 25% auto auto; */
+        /* grid-template-rows: 50px 40px 1.5fr 0.5fr 0.5fr; */
+        grid-template-rows: 50px 1fr 1fr 1fr 1fr;
+        grid-template-areas: "header header header header" 
+        "main main  main main"
+        "main main  main main"
+        "compare compare compare compare"
+        "compare compare compare compare"
+    }
+    .selection-graph {
+        display: none;
+    }
+    .info-detail {
+        display: none;
+    }
+}
+
+.selection-box {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    cursor: pointer;
+    border-radius: 5%;
+}
+
+.selection-box:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.graph-select-area {
+    margin: 5px;
+    padding: 5px;
+    box-shadow: rgba(45, 226, 21, 0.16) 0px 1px 1px;
+    border-radius: 5%;
 }

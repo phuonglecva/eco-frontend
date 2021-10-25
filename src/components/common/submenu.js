@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Breadcrumb, Button } from 'antd';
+import { Layout, Menu, Breadcrumb, Button, Row, Col, Card } from 'antd';
 import {
     DashboardOutlined,
     DatabaseOutlined,
@@ -10,7 +10,6 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined
 } from '@ant-design/icons';
-import { List, Card } from 'antd';
 import '../css/Submenu.css';
 import StatisticGraph from '../graph/StatisticGraph';
 import BarGraph from '../graph/VisExample';
@@ -28,9 +27,10 @@ import IipForecast from '../graph/forecast_graph/IipForecast';
 import axios from 'axios';
 import FreqReport from '../report/FreqReport';
 import 'antd/dist/antd.css'
+import AppFooter from './footer';
 
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Sider, Footer } = Layout;
 function Sub() {
     const [content, setContent] = useState('');
     const [selectedKey, setSelectedKey] = useState({ key: 'dash' });
@@ -68,18 +68,24 @@ function Sub() {
 
     const fetchData = React.useCallback(() => {
         const getCurrentStatusUrl = `${process.env.REACT_APP_API_URL}/current-status`
-                axios.get(getCurrentStatusUrl).then((response) => {
+        axios.get(getCurrentStatusUrl).then((response) => {
             let resData = response.data.data
-            // console.log(data)
+            console.log(resData)
             let tempData = []
-            resData.slice(0, -1).forEach((val, idx) => {
+            resData.slice(0, 2).forEach((val, idx) => {
                 tempData.push({
                     title: val.name,
                     value: val.data,
                     unit: '%'
                 })
             })
-            let unEmpData = resData.at(-1)
+            resData.slice(2, 4).forEach((val, idx) => {
+                tempData.push({
+                    title: val.name,
+                    value: val.data,
+                    unit: 'tr. $'
+                })
+            })
             console.log(tempData)
             setData(tempData)
         }).catch((err) => {
@@ -93,7 +99,7 @@ function Sub() {
     return (
         <div>
 
-            <Layout>
+            <Layout style={{ minHeight: "100vh" }}>
 
                 <Sider collapsible collapsed={showSubMenu}
                     onCollapse={(val) => {
@@ -101,27 +107,27 @@ function Sub() {
                         if (width == "75px") {
                             setWidth("25%")
                         } else setWidth("75px")
-                        
+
                         setShowSubMenu(val)
                     }}
                     width={"25%"} className="site-layout-background line" style={{
-                        minWidth:"25%"
+                        // minWidth:"25%"
                     }}
                 >
-                    <div style={{display:"fixed"}}>
+                    <div style={{ display: "fixed" }}>
                         <Menu
                             mode="inline"
                             defaultSelectedKeys={['dash']}
-                            defaultOpenKeys={['data']}
-                            style={{ height: '100%', borderRight: 0, minHeight: "88vh" }}
+                            // defaultOpenKeys={['data']}
+                            style={{ height: '100%', borderRight: 0 }}
                             onSelect={(e) => {
                                 setSelectedKey(e)
                             }}
                         >
                             <Menu.Item key="dash" icon={<DashboardOutlined />} title="Dashboard">DashBoard</Menu.Item>
                             <SubMenu key="data" icon={<DatabaseOutlined />} title="Thống kê các chỉ số kinh tế xã hội">
-                               <Menu.Item key="cpies" title="Chỉ số giá tiêu dùng">Chỉ số giá tiêu dùng (cpi)</Menu.Item>
-                                <Menu.Item key="iips" title="Chỉ số sản xuất công nghiệp">Chỉ số sản xuất công nghiệp (iip)</Menu.Item>
+                                <Menu.Item key="cpies" title="Chỉ số giá tiêu dùng">Chỉ số giá tiêu dùng</Menu.Item>
+                                <Menu.Item key="iips" title="Chỉ số sản xuất công nghiệp">Chỉ số sản xuất công nghiệp</Menu.Item>
                                 <Menu.Item key="unemployment" title="Tỷ lệ thất nghiệp">Tỷ lệ thất nghiệp</Menu.Item>
                                 <Menu.Item key="export" title="Kim ngạch xuất khẩu">Kim ngạch xuất khẩu</Menu.Item>
                                 <Menu.Item key="import" title="Kim ngạch nhập khẩu">Kim ngạch nhập khẩu</Menu.Item>
@@ -135,14 +141,13 @@ function Sub() {
                             </SubMenu>
                             <SubMenu key="report" icon={<ContainerOutlined />} title="Báo cáo">
                                 <Menu.Item key="freq_report" title="Báo cáo định kỳ">Báo cáo định kỳ</Menu.Item>
-                                {/* <Menu.Item key="export_report" title="Xuất báo cáo">Xuất báo cáo</Menu.Item> */}
                             </SubMenu>
                         </Menu>
                     </div>
                 </Sider>
 
-                 
-                <Layout style={{ padding: '0 12px 12px', marginTop:"100px", marginLeft:`${width}` }}>
+
+                <Layout style={{ padding: '0 12px 12px', marginTop: "100px", marginLeft: `${width}` }}>
                     <Content
                         className="site-layout-background site-content"
                         style={{
@@ -153,21 +158,35 @@ function Sub() {
 
                     >
                         <header>
-                            <ul>
+                            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+
+                                {/* <ul> */}
                                 {(!hideKeyList.includes(selectedKey.key)) && data.map((item, id) => {
                                     return (
-                                        <li className="box-shadow">
-                                            <h3 style={{ margin: "0px", fontFamily: "candara", color: "inherit" }}>{item.title}</h3>
-                                            <div style={{ display: "flex", float: "right", color: "inherit" }}>
-                                                <div>
-                                                    {(parseFloat(item.value) > 0) ? <CaretUpOutlined className="icon" /> : <CaretDownOutlined className="icon" style={{ color: "red" }} />}
-                                                </div>
-                                                <div>{item.value} {item.unit}</div>
-                                            </div>
-                                        </li>
+                                        <Col span={6}>
+                                            <Card hoverable>
+                                                <Card.Meta title={`${item.title}`}
+                                                    description={(
+                                                        <div style={{fontFamily:"", fontSize:"calc(3px + 1vw)"}}>
+                                                            {`${item.value} ${item.unit}`}
+                                                            {(parseFloat(item.value) > 0) ? <CaretUpOutlined className="icon" /> : <CaretDownOutlined className="icon" style={{ color: "red" }} />}
+                                                        </div>
+                                                    )} />
+                                            </Card>
+                                        </Col>
+                                        // <li className="box-shadow">
+                                        //     <h3 style={{ margin: "0px", fontFamily: "candara", color: "inherit" }}>{item.title}</h3>
+                                        //     <div style={{ display: "flex", float: "right", color: "inherit" }}>
+                                        //         <div>
+                                        //             {(parseFloat(item.value) > 0) ? <CaretUpOutlined className="icon" /> : <CaretDownOutlined className="icon" style={{ color: "red" }} />}
+                                        //         </div>
+                                        //         <div>{item.value} {item.unit}</div>
+                                        //     </div>
+                                        // </li>
                                     )
                                 })}
-                            </ul>
+                                {/* </ul> */}
+                            </Row>
                         </header>
                         <div style={{ width: "100%" }} className="graph-content">
                             {(selectedKey.key === 'dash') ? <StatisticGraph /> : ''}

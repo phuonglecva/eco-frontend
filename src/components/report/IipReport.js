@@ -22,9 +22,8 @@ const IipReport = () => {
     const [data, setData] = useState([])
     const [columns, setColumns] = useState([])
     const fetchData = () => {
-
         let url = (timeType === 'single') ? `${process.env.REACT_APP_API_URL}/iip-report?month=${month}&year=${year}` :
-            `https://aic-group.bike/api/v1/dong-nai/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
+            `${process.env.REACT_APP_API_URL}/iip-report?fromMonth=${fromMonth}&fromYear=${fromYear}&toMonth=${toMonth}&toYear=${toYear}`
         axios.get(url)
             .then((response) => {
                 let data = response.data

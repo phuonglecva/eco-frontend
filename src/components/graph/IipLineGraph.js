@@ -18,7 +18,7 @@ const IipLineGraph = (props) => {
     data,
     height: 300,
     xField: 'month',
-    yField: 'iip_data',
+    yField: 'value',
     seriesField: "cat",
     point: {
       size: 3,
@@ -102,7 +102,7 @@ const IipLineGraph = (props) => {
         iip.forEach((val, index) => {
           data.push({
             month: timeline[index],
-            iip_data: parseFloat(val),
+            value: parseFloat(val),
             cat: title,
             key: 0
           })
@@ -112,7 +112,7 @@ const IipLineGraph = (props) => {
           sub.value.forEach((val, id) => {
             data.push({
               month: timeline[id],
-              iip_data: parseFloat(val),
+              value: parseFloat(val),
               cat: sub.name,
               key: idx + 1
             })
@@ -122,7 +122,7 @@ const IipLineGraph = (props) => {
         let barData = {
           timeline: timeline,
           // data: [
-          //   { name: "Chỉ số iip", data: data.map(val => val.iip_data) }
+          //   { name: "Chỉ số iip", data: data.map(val => val.value) }
           // ]
           data: [
             {
@@ -182,7 +182,9 @@ const IipLineGraph = (props) => {
       data={data}
       barData={barData}
       checkList={checkList}
-      setCheckList={setCheckList} />
+      setCheckList={setCheckList}
+      compareConfig={config}
+    />
   )
 };
 export default IipLineGraph;

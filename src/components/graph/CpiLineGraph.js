@@ -7,17 +7,44 @@ import BaseLineGraph from './LineGraph/BaseLineGraph';
 import '../css/LineGraph.css'
 import CanvasDemo from './Canvas/CanvasDemo';
 import { Modal } from 'antd'
+import { configConsumerProps } from 'antd/lib/config-provider';
+
+const generateCompareConfig = (data) => {
+  let newData = data.map((value) => {
+    return { ...value, value: parseFloat(value.value + Math.random() *3), cat: "Cả nước", key: 1 }
+  })
+
+  return {
+    data: [...data, ...newData],
+    xField: "month",
+    yField: "value",
+    seriesField: "cat",
+    yAxis: {
+      label: {
+        formatter: function formatter(v) {
+          return ''.concat(v).replace(/\d{1,3}(?=(\d{3})+$)/g, function (s) {
+            return ''.concat(s, ',');
+          });
+        },
+      },
+    },
+    color: ['#1979C9', '#D62A0D', '#FAA219'],
+    slider: {}
+  }
+}
 
 const LineGraph = (props) => {
   const [data, setData] = useState(Array.from({ length: 30 }, (x, i) => ({ year: 2000 + i, value: Math.random() })))
   const [barData, setBarData] = useState()
   const [subData, setSubData] = useState([])
   const [checkList, setCheckList] = useState([])
+  const [compareConfig, setCompareConfig] = useState([])
+
   const [config, setConfig] = useState({
     data: data,
     height: 300,
     xField: 'month',
-    yField: 'cpi_data',
+    yField: 'value',
     seriesField: "cat",
     point: {
       size: 3,
@@ -101,7 +128,7 @@ const LineGraph = (props) => {
             data.push({
               month: ti,
               cat: cat_name,
-              cpi_data: parseFloat((parseFloat(val[i]) - 100).toFixed(2)),
+              value: parseFloat((parseFloat(val[i]) - 100).toFixed(2)),
               key: idx
             })
           }
@@ -124,7 +151,9 @@ const LineGraph = (props) => {
         // setCheckList(checkList.map((_, id)=> id == 0))
         setConfig({ ...config, data: defaultData, barData: { ...barData, data: defaultBarData } })
 
-        console.log('cpi data', data)
+        // set compare config for data
+        let compareConfig = generateCompareConfig(defaultData)
+        setCompareConfig(compareConfig)
       })
       .catch((error) => {
         console.log(error)
@@ -145,7 +174,9 @@ const LineGraph = (props) => {
       data={data}
       barData={barData}
       checkList={checkList}
-      setCheckList={setCheckList} />
+      setCheckList={setCheckList}
+      compareConfig={compareConfig}
+    />
   )
 };
 export default LineGraph;

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Line } from '@ant-design/charts';
 import axios from 'axios';
 import { Select } from 'antd';
-import BaseBarGraph from './StatisticBarGraph/BarBaseGraph';
-import BaseLineGraph from './LineGraph/BaseLineGraph';
+
 import '../css/LineGraph.css';
 import CanvasDemo from './Canvas/CanvasDemo';
 
@@ -147,7 +146,10 @@ const ThuChiLineGraph = (props) => {
 
     const [graphType, setGraphType] = useState("bar")
     return (
-        <div style={{ width: "100%", textAlign: "center" }}>
+        <div style={{
+            width: "100%", textAlign: "center",
+            boxShadow: " rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+        }}>
             <h2 style={{ color: "#34568B", marginTop: "20px", fontFamily: 'Georgia, Times, "Times New Roman", self-serif', textTransform: "uppercase", fontWeight: "bolder" }}>Thu chi ngân sách</h2>
 
             <div className="graph-area">
@@ -157,8 +159,7 @@ const ThuChiLineGraph = (props) => {
                 </Select>
 
                 <div style={{ clear: "both" }}>
-                    {/* {(graphType === 'line') && <BaseLineGraph {...thuConfig} />} */}
-                    {/* {(graphType === 'bar') && <BaseBarGraph {...thuConfig} />} */}
+
                     <div className="line-graph">
                         {(graphType === 'line') && <Line {...thuConfig} />}
                         {(graphType === 'bar') && <CanvasDemo {...thuConfig} />}

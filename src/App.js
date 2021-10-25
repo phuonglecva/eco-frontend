@@ -21,18 +21,10 @@ function App(props) {
   const ssoURL = "http://sso.ai2c.asia/org/authentication?clientid="
   const tokenInfoUrl = "https://sso.ai2c.asia/org/authentication/Authenticate?token=";
   // const baseUrl = "http://localhost:3000"
-  const baseUrl = "https://ktxh.ai2c.asia/"
+  const baseUrl = process.env.REACT_APP_BASE_URL
   const [ssoToken, setSsoToken] = useState(false)
-  const [isExpire, setIsExpire] = useState(true)
-
-  console.log(props)
   
-  // fetchTokenInfo = () => {
-  //   axios.get(`${tokenInfoUrl}${token}`).then((res) => {
-  //     console.log(res.data)
-  //   })
-  // }
-
+  console.log(props)
   useEffect(() => {
     let token = localStorage.getItem("token")
 
@@ -47,8 +39,10 @@ function App(props) {
 
     token = paramsObj.get('token')
     if (!token) {
-      console.log(process.env.REACT_APP_API_URL)
-      window.location.assign(`${ssoURL}${clientId}&returnUrl=${baseUrl}`)
+      console.log(process.env.REACT_APP_BASE_URL)
+      // setTimeout(() => {
+      //   window.location.assign(`${ssoURL}${clientId}&returnUrl=${baseUrl}`)
+      // }, 2222)
     } else {
       localStorage.setItem("token", token)
       setSsoToken(token)
@@ -58,48 +52,20 @@ function App(props) {
   }, [])
   // if (ssoToken === false) {
   //   return <LoginForm setToken={setToken} />
-  // } else 
+  // } else
   return (
 
     <Router>
       <Switch>
         <Route exact path='/' render={() => {
-          return (ssoToken == false) ? <LoginForm /> : (<MainApp setSsoToken={setSsoToken} />)
+          return (ssoToken == false) ? <LoginForm setSsoToken={setSsoToken} /> : (<MainApp setSsoToken={setSsoToken} />)
         }} />
         <Route path='/sub-menu' render={() => {
-          return (ssoToken === false) ? <LoginForm /> : (
+          return (ssoToken === false) ? <LoginForm setSsoToken={setSsoToken} /> : (
             <SubMenu setSsoToken={setSsoToken} />
           )
         }} />
       </Switch>
-      {/* <Layout className="mainLayout">
-        <Header>
-          <AppHeader setToken={setToken} />
-        </Header>
-        <Content>
-
-          <Switch>
-            <Route exact path='/' render={() => {
-
-              return (
-                <div>
-                  <AppHome />
-                  <Footer>
-                    <AppFooter />
-                  </Footer>
-                </div>
-              )
-
-            }} />
-            <Route path="/login" component={LoginForm} />
-            <Route exact path='/sub-menu' render={() => {
-              return (
-                <Sub />
-              )
-            }} />
-          </Switch>
-        </Content>
-      </Layout> */}
     </Router>
 
   );
@@ -109,7 +75,7 @@ const MainApp = (props) => {
 
     <Layout className="mainLayout">
       <Header>
-        <AppHeader setSsoToken={props.setSsoToken} />
+        <AppHeader setSsoToken={props.setSsoToken}/>
       </Header>
 
       <Content>
@@ -133,9 +99,9 @@ const SubMenu = (props) => {
         <Sub />
       </Content>
 
-      <Footer>
+      {/* <Footer>
         <AppFooter />
-      </Footer>
+      </Footer> */}
     </Layout>
   )
 
