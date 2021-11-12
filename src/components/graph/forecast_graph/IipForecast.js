@@ -6,6 +6,10 @@ import BaseForecast from './BaseForecast';
 const IipForecast = (props) => {
     const defaultAlpha = 0.9
     const [mixData, setMixData] = useState({})
+    const [forecastData, setForecastData] = useState({
+        timeline: [],
+    })
+    const [forecastAvg, setForecastAvg] = useState(0.0)
 
     const fetchData = React.useCallback(async () => {
         // const iipForecastUrl = `https://aic-group.bike/api/v1/dong-nai/iips/forecast/6?alpha=${defaultAlpha}`
@@ -25,6 +29,10 @@ const IipForecast = (props) => {
                 const { lower, upper } = iipForecastData.data
                 let forecastTimeline = iipForecastData.data.timeline
                 let iipForecast = iipForecastData.data.iip
+                setForecastData({ timeline: forecastTimeline })
+                // count and set forecast Avg
+                const avg = (iipForecast[0] + iipForecast[1] + iipForecast[2]) / 3
+                setForecastAvg(avg)
 
                 let mixData = {
                     "line": [],
@@ -87,9 +95,11 @@ const IipForecast = (props) => {
     React.useEffect(() => {
         fetchData()
     }, [fetchData])
+    const forecastText = <li style={{ paddingLeft: "20px" }}>
+        Dự báo chỉ số sản xuất toàn ngành công nghiệp trong 3 tháng kế tiếp từ {forecastData.timeline[0]} {(forecastAvg > 0) ? "tăng trung bình" : "giảm trung bình"} {(forecastAvg).toFixed(2)} %
+    </li>
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="sản xuất công nghiệp" title={props.title} />
-
+        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="sản xuất công nghiệp" title={props.title} forecastText={forecastText}/>
     )
 };
 export default IipForecast;

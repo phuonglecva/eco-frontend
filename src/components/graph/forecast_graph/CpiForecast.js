@@ -6,7 +6,11 @@ import BaseForecast from './BaseForecast';
 const CpiForecast = (props) => {
     const defaultAlpha = 0.9
     const [mixData, setMixData] = useState({})
-    const [forecastData, setForecastData] = useState()
+    const [forecastAvg, setForecastAvg] = useState(0.0)
+    const [forecastData, setForecastData] = useState({
+        cpi: [],
+        timeline: []
+    })
     const fetchData = React.useCallback(() => {
         // const cpisURL = "https://aic-group.bike/api/v1/dong-nai/cpies"
         // const cpiForecastURL = `https://aic-group.bike/api/v1/dong-nai/cpis/forecast/12?alpha=${defaultAlpha}`
@@ -34,16 +38,16 @@ const CpiForecast = (props) => {
 
                     mixData["line"].push({
                         month: timeline[index],
-                        value: parseFloat((parseFloat(val) - 100))
+                        value: parseFloat((parseFloat(val) - 100).toFixed(2))
                     })
                     if (index === cpi_length - 4) {
                         mixData["area"].push({
                             month: timeline[index],
-                            value: [parseFloat(parseFloat(val) - 100), parseFloat(parseFloat(val) - 100)]
+                            value: [parseFloat(parseFloat(val).toFixed(2) - 100), parseFloat(parseFloat(val).toFixed(2) - 100)]
                         })
                         mixData["forecastLine"].push({
                             month: timeline[index],
-                            value: parseFloat(parseFloat(val) - 100)
+                            value: parseFloat(parseFloat(val).toFixed(2) - 100)
                         })
                     } else if (index < cpi_length - 4) {
                         mixData["area"].push({
@@ -61,6 +65,9 @@ const CpiForecast = (props) => {
                 const forcastTimeline = forecastData.data.timeline
                 cpi = forecastData.data.cpi
                 console.log("upper, lower, cpi, timeline: ", upper, lower, cpi, timeline)
+                // count and set forecast Average of next 3 months
+                const avg = (cpi[0] + cpi[1] + cpi[2]) / 3
+                setForecastAvg(avg)
 
                 upper.forEach((up, index) => {
                     const month = forcastTimeline[index].split("/")[0]
@@ -93,9 +100,13 @@ const CpiForecast = (props) => {
         fetchData()
     }, [])
 
-
+    const forecastText = <li style={{paddingLeft:"20px"}}>
+        Dự báo chỉ số giá tiêu dùng chung trong 3 tháng kế tiếp từ {forecastData.timeline[0]} {(forecastAvg > 0) ? "tăng trung bình": "giảm trung bình"} {(forecastAvg).toFixed(2)} 
+    </li>
     return (
-        <BaseForecast unit="%" forecastData={forecastData} mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} />
+        <div>
+            <BaseForecast unit="%" forecastData={forecastData} mixData={mixData} defaultAlpha={defaultAlpha} name="cpi" title={props.title} forecastText={forecastText} />
+        </div>
     )
 };
 export default CpiForecast;

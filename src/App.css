@@ -222,12 +222,10 @@ hero
 .heroBlock {
   /* background: url('assets/images/bg-hero.jpg') no-repeat; */
   background: url('assets/images/images/hero-bg.png') no-repeat;
+  width: 100%;
   background-size: 100% 90%;
   background-position: 50% 100%;
-  /* background-size: cover; */
-  height: 98vh;
-  padding: 0;
-  margin: 0px;
+  height: 95vh;
 }
 
 .heroBlock .container-fluid {

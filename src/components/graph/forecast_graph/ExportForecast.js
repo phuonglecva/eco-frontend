@@ -6,13 +6,17 @@ import BaseForecast from './BaseForecast';
 const ExportForecast = (props) => {
     const defaultAlpha = 0.9
     const [mixData, setMixData] = useState({})
+    const [forecastData, setForecastData] = useState({
+        timeline: [],
 
+    })
+    const [forecastAvg, setForecastAvg] = useState(0.0)
     const fetchData = React.useCallback(async () => {
         // const importURL = "https://aic-group.bike/api/v1/dong-nai/export"
         // const importForecastURL = `https://aic-group.bike/api/v1/dong-nai/export/forecast/12?alpha=${defaultAlpha}`
         const importURL = `${process.env.REACT_APP_API_URL}/export`
         const importForecastURL = `${process.env.REACT_APP_API_URL}/export/forecast/12?alpha=${defaultAlpha}`
-
+        
         const getImport = axios.get(importURL)
         const getImportForecast = axios.get(importForecastURL)
 
@@ -20,11 +24,14 @@ const ExportForecast = (props) => {
             axios.spread((...allData) => {
                 const exportData = allData[0].data
                 const importForecastData = allData[1].data
-
                 const { timeline, total_export } = exportData.data
                 const { lower, upper } = importForecastData.data
                 const exportForecast = importForecastData.data.export
                 const forecastTimeline = importForecastData.data.timeline
+                setForecastData({ data: exportForecast, timeline: forecastTimeline })
+                // count and set forecastAvg
+                const avg = (exportForecast[0] + exportForecast[1] + exportForecast[2]) / 3
+                setForecastAvg(avg)
 
                 let addedId = total_export.value.length - 4
 
@@ -92,10 +99,11 @@ const ExportForecast = (props) => {
         fetchData()
     }, [fetchData])
 
-
+    const forecastText = <li style={{ paddingLeft: "20px" }}>
+        Dự báo kim ngạch xuất khẩu trong 3 tháng kế tiếp từ {forecastData.timeline[0]} đạt trung bình {(forecastAvg).toFixed(2)} triệu đô.
+    </li>
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="xuất khẩu" title={props.title} />
-
+        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="xuất khẩu" title={props.title} forecastData={forecastData} forecastText={forecastText}/>
     )
 };
 export default ExportForecast;

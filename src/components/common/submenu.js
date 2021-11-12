@@ -168,8 +168,9 @@ function Sub() {
                                                 <Card.Meta title={`${item.title}`}
                                                     description={(
                                                         <div style={{fontFamily:"", fontSize:"calc(3px + 1vw)"}}>
-                                                            {`${item.value} ${item.unit}`}
                                                             {(parseFloat(item.value) > 0) ? <CaretUpOutlined className="icon" /> : <CaretDownOutlined className="icon" style={{ color: "red" }} />}
+                                                            {(id) === 0 ? `${parseFloat(item.value - 100).toFixed(2)} ${item.unit}`: `${item.value} ${item.unit}`}
+                                                            {}
                                                         </div>
                                                     )} />
                                             </Card>

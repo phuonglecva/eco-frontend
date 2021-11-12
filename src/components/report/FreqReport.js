@@ -9,7 +9,7 @@ import ImportReport from './ImportReport';
 import ExportReport from './ExportReport';
 import UnemploymentReport from './UnemploymentReport';
 import ThuchiReport from './ThuchiReport';
-
+import './BaseReport.css'
 const { Panel } = Collapse;
 
 const text = `
@@ -56,23 +56,23 @@ const FreqReport = (props) => {
                     <li><a>Chỉ số kim ngạch nhập khẩu</a></li>
                     <li><a>Tỷ lệ thất nghiệp</a></li>
                 </ul> */}
-                <Collapse accordion>
-                    <Panel header="Chỉ số giá tiêu dùng" key="1">
+                <Collapse accordion bordered>
+                    <Panel className="index-report" header="Chỉ số giá tiêu dùng" key="1">
                         <CpiReport />
                     </Panel>
-                    <Panel header="Chỉ số sản xuất công nghiệp" key="2">
+                    <Panel className="index-report" header="Chỉ số sản xuất công nghiệp" key="2">
                         <IipReport />
                     </Panel>
-                    <Panel header="Chỉ số kim ngạch xuất khẩu" key="3">
+                    <Panel className="index-report" header="Chỉ số kim ngạch xuất khẩu" key="3">
                         <ExportReport />
                     </Panel>
-                    <Panel header="Chỉ số kim ngạch nhập khẩu" key="4">
+                    <Panel className="index-report" header="Chỉ số kim ngạch nhập khẩu" key="4">
                         <ImportReport />
                     </Panel>
-                    <Panel header="Tỷ lệ thất nghiệp" key="5">
+                    <Panel className="index-report" header="Tỷ lệ thất nghiệp" key="5">
                         <UnemploymentReport />
                     </Panel>
-                    <Panel header="Thu chi ngân sách" key="6">
+                    <Panel className="index-report" header="Thu chi ngân sách" key="6">
                         <ThuchiReport />
                     </Panel>
                 </Collapse>

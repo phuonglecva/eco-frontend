@@ -6,6 +6,10 @@ import '../../css/LineGraph.css'
 const ImportForecast = (props) => {
     const defaultAlpha = 0.9
     const [mixData, setMixData] = useState({})
+    const [forecastData, setForecastData] = useState({
+        timeline: [],
+    })
+    const [forecastAvg, setForecastAvg] = useState(0.0);
 
     const fetchData = React.useCallback(async () => {
         // const importURL = "https://aic-group.bike/api/v1/dong-nai/import"
@@ -25,6 +29,9 @@ const ImportForecast = (props) => {
                 const { lower, upper } = importForecastData.data
                 const importForecast = importForecastData.data.import
                 const forecastTimeline = importForecastData.data.timeline
+                setForecastData({timeline: forecastTimeline})
+                const avg = (importForecast[0] + importForecast[1] + importForecast[2]) / 3
+                setForecastAvg(avg)
 
                 let mixData = {
                     line: [],
@@ -89,9 +96,11 @@ const ImportForecast = (props) => {
     React.useEffect(() => {
         fetchData()
     }, [])
+    const forecastText = <li style={{ paddingLeft: "20px" }}>
+        Dự báo chỉ số giá tiêu dùng chung trong 3 tháng kế tiếp từ {forecastData.timeline[0]} đạt trung bình {(forecastAvg).toFixed(2)}
+    </li>
     return (
-        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="nhập khẩu" title={props.title} />
-
+        <BaseForecast unit="%" mixData={mixData} defaultAlpha={defaultAlpha} name="nhập khẩu" title={props.title} forecastText={forecastText}/>
     )
 };
 export default ImportForecast;
